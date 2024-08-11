@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+body{
+    height: 96vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    border: 11px dashed red;
+}
+#SnakeHead{
+    width: 15px;
+    height: 15px;
+    background-color: green;
+    border: 1px solid;
+    border-radius: 50%;
+    z-index: -1;
+}
+
+#gameOverContainer{
+    width: calc(100% - 24px);
+    height: 96vh;
+    position: absolute;
+    z-index: 9999;
+    background-color: #a5949480;
+    
+}
