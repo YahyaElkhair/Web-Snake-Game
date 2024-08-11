@@ -33,12 +33,20 @@ function moveSnake(){
     pageBody.addEventListener("keydown" , function(event){
         switch(event.key) {
             case "ArrowUp":
-                snakeHead.style.transform += "translateY(-15px)";
-                snakePsition[0]++;
+                if(!isGameOver(snakePsition , windowBorder)){
+                    snakeHead.style.transform += "translateY(-15px)";
+                    snakePsition[0]++;
+                }else{
+                    GameIsOver();
+                }
                 break;
             case "ArrowDown":
-                snakeHead.style.transform += "translateY(15px)";
-                snakePsition[0]--;
+                if(!isGameOver(snakePsition , windowBorder)){
+                    snakeHead.style.transform += "translateY(15px)";
+                    snakePsition[0]--;
+                }else{
+                    GameIsOver();
+                }
                 break;
             case "ArrowLeft":
                 if(!isGameOver(snakePsition , windowBorder)){
@@ -56,6 +64,7 @@ function moveSnake(){
                 }else{
                     GameIsOver();
                 }
+
                 break;
             default:
                 break;
