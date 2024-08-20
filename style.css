@@ -19,9 +19,8 @@ body{
     position: absolute;
     top: 50%;
     left: 50%;
-
-
 }
+
 .SnakeHead{
     width: 15px;
     height: 15px;
@@ -34,13 +33,13 @@ body{
 .SnakeFood , .SnakeTail{
     width: 15px;
     height: 15px;
-    padding: 0;
     background-color: red;
     border: 1px solid;
     border-radius: 50%;
     z-index: 2;
     position: relative;
 }
+
 .SnakeTail::after{
     content: "";
     width: 4px;
@@ -52,6 +51,8 @@ body{
 }
 .SnakeFood{
     position: absolute;
+    z-index: 0;
+
 }
 #gameOverContainer{
     width: 100vw;
