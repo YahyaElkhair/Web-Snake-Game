@@ -1,33 +1,31 @@
 var pageBody = document.body;
 let animationId = null;
-let currentDirection = "left";
+let currentDirection = "right";
 
 const windowBorder = (window.innerWidth / 2) ;
 const windowHeight = (window.innerHeight / 2);
 
 const snakeHead = document.getElementById("SnakeHead");
+const snakeContainer = document.getElementById("SnakeContainer");
 let snakeFood = document.getElementById("SnakeFoodid");
 
+const ReplayBtn = document.getElementById("ReplayBtn");
 
 
 let i = windowBorder;
 var j = windowHeight;
 
-const GameOverHedding = document.getElementById("GameOverHedding");
 
 function isSnakeHeadOverlappingFood() {
     let sFood = snakeFood.getBoundingClientRect();
     let sHead = snakeHead.getBoundingClientRect();
-
-    // Check for overlap on all sides
-
 
     return !(
         sHead.right < sFood.left ||
         sHead.left > sFood.right ||
         sHead.bottom < sFood.top ||
         sHead.top > sFood.bottom
-    );;
+    );
 }
 
 function isTouchingBodyBorder() {
@@ -56,44 +54,92 @@ function generateSnakeFood(){
 }
 
 function GameOverStyle(){
-    if(document.getElementById("GameOverHedding") == null){
-        let gameOverContainer = document.createElement("div");
-        gameOverContainer.id = "gameOverContainer";
-        gameOverContainer.style.display = 'flex';
-        gameOverContainer.style.flexDirection = 'row';
-        gameOverContainer.style.justifyContent = 'center';
-        gameOverContainer.style.alignItems = 'center';
+    if(document.getElementById("GameOverContainer") == null){
+        let GameOverContainer = document.createElement("div");
+        GameOverContainer.id = "GameOverContainer";
+    
 
-        let gameOverText = document.createElement("h1");
-        gameOverText.textContent = "You Lost !!";
-        gameOverText.style.zIndex = 9999;
-        gameOverText.id = "GameOverHedding";
-        gameOverContainer.appendChild(gameOverText);
-        pageBody.appendChild(gameOverContainer);
+        let GameOverHidding = document.createElement("h1");
+        GameOverHidding.textContent = "Game Over";
+
+        let ReplayBtn = document.createElement("button");
+        ReplayBtn.id = "ReplayBtn";
+        ReplayBtn.textContent = "Play again";
+        ReplayBtn.addEventListener("click" , () => location.reload());
+        GameOverContainer.appendChild(GameOverHidding);
+        GameOverContainer.appendChild(ReplayBtn);
+        pageBody.appendChild(GameOverContainer);
     }
 }
+
 
 
 function handleKeysDown(event){
     if (event.key === "ArrowLeft" && currentDirection !== "right") {
         currentDirection = "left";
+        snakeContainer.style.flexDirection = "row";
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+            
+        });
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.add("SnakeTailRowRigth");
+        })
     } else if (event.key === "ArrowRight" && currentDirection !== "left") {
         currentDirection = "right";
+        snakeContainer.style.flexDirection = "row-reverse";
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+            
+        });     
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.add("SnakeTailRowLeft");
+        })
     } else if (event.key === "ArrowUp" && currentDirection !== "down") {
         currentDirection = "up";
+        snakeContainer.style.flexDirection = "column";
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+            
+        });        
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.add("SnakeTailColumnBottom");
+        })
     } else if (event.key === "ArrowDown" && currentDirection !== "up") {
         currentDirection = "down";
+        snakeContainer.style.flexDirection = "column-reverse";
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+            
+        });
+        document.querySelectorAll(".SnakeTail").forEach(function(t){
+            t.classList.add("SnakeTailColumnTop");
+        });
     }
 
 }
 
-
-
-
 function addSnakeTail(){
     let snakeTail = document.createElement("div");
-    snakeTail.className = "SnakeTail";
-    snakeHead.appendChild(snakeTail);
+    snakeTail.classList.add("SnakeTail" , "SnakeTailRowLeft");
+    if(getComputedStyle(snakeContainer).flexDirection == "row"){
+        snakeTail.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+        snakeTail.classList.add("SnakeTail" , "SnakeTailRowRigth");
+
+    }else if(getComputedStyle(snakeContainer).flexDirection == "row-reverse"){
+        snakeTail.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+        snakeTail.classList.add("SnakeTail" , "SnakeTailRowLeft");
+
+    }else if(getComputedStyle(snakeContainer).flexDirection == "column"){
+        snakeTail.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+        snakeTail.classList.add("SnakeTail" , "SnakeTailColumnBottom");
+
+    }else if(getComputedStyle(snakeContainer).flexDirection == "column-reverse"){
+        snakeTail.classList.remove("SnakeTailRowLeft" , "SnakeTailRowRigth",  "SnakeTailColumnBottom" , "SnakeTailColumnTop");
+        snakeTail.classList.add("SnakeTail" , "SnakeTailColumnTop");
+
+    }
+    snakeContainer.appendChild(snakeTail);
 }
 
 
@@ -104,6 +150,7 @@ function moveSnake() {
     if (isTouchingBodyBorder()) {
         cancelAnimationFrame(animationId);
         GameOverStyle();
+
         pageBody.removeEventListener("keydown", handleKeysDown);
         return;
     }
@@ -117,17 +164,17 @@ function moveSnake() {
     
     if (currentDirection === "left") {
         i -= 2;
-        snakeHead.style.left = `${i}px`;
+        snakeContainer.style.left = `${i}px`;
         
     } else if (currentDirection === "right") {
         i += 2;
-        snakeHead.style.left = `${i}px`;
+        snakeContainer.style.left = `${i}px`;
     } else if (currentDirection === "up") {
         j -= 2;
-        snakeHead.style.top = `${j}px`;
+        snakeContainer.style.top = `${j}px`;
     } else if (currentDirection === "down") {
         j += 2;
-        snakeHead.style.top = `${j}px`;
+        snakeContainer.style.top = `${j}px`;
     } else {
         console.log("Invalid direction");
     }
@@ -142,5 +189,4 @@ window.onload = function(){
     animationId = requestAnimationFrame(moveSnake);
     generateSnakeFood();
 
-    
 } 
